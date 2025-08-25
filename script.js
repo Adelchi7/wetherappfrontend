@@ -7,30 +7,30 @@ async function waitForService() {
 
   while (!ready) {
     try {
-      let res = await fetch(PING_URL, { cache: "no-cache" });
+      const res = await fetch(PING_URL, { cache: "no-cache" });
       if (res.ok) ready = true;
     } catch (e) {
       console.log("Service not ready yet...");
     }
 
     if (!ready) {
-      // Animate progress bar
       const progressBar = document.getElementById("progress-bar");
+      progressBar.style.width = "0%";
+
       let startTime = Date.now();
 
-      function animate() {
+      // Animate the progress bar over 60 seconds
+      const interval = setInterval(() => {
         const elapsed = Date.now() - startTime;
         const percent = Math.min((elapsed / RETRY_INTERVAL) * 100, 100);
         progressBar.style.width = percent + "%";
-        if (elapsed < RETRY_INTERVAL) requestAnimationFrame(animate);
-      }
-      animate();
+        if (percent >= 100) {
+          clearInterval(interval); // stop animation after 1 minute
+        }
+      }, 100); // update every 100ms
 
-      // Wait 1 minute
+      // Wait full 1 minute before next retry
       await new Promise(r => setTimeout(r, RETRY_INTERVAL));
-
-      // Reset progress bar for next retry
-      progressBar.style.width = "0%";
     }
   }
 
@@ -43,6 +43,7 @@ async function waitForService() {
 }
 
 waitForService();
+
 
 
 
