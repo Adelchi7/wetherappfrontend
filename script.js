@@ -14,7 +14,7 @@ async function waitForService() {
     }
 
     if (!ready) {
-      await new Promise(r => setTimeout(r, 5000)); // retry every 5s
+      await new Promise(r => setTimeout(r, 60000)); // retry every 5s
     }
   }
 
