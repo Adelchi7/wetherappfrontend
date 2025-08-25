@@ -1,47 +1,35 @@
-const PING_URL = "https://wetherappbackend.onrender.com/ping"; // your backend
+const PING_URL = "https://wetherappbackend.onrender.com/ping";
 const APP_URL = "https://wetherappbackend.onrender.com/app";
-const RETRY_INTERVAL = 60000; // 1 minute
-
-function startProgressBar() {
-  const progressBar = document.getElementById("progress-bar");
-  progressBar.style.width = "0%";
-
-  let startTime = Date.now();
-
-  return setInterval(() => {
-    const elapsed = Date.now() - startTime;
-    const percent = Math.min((elapsed / RETRY_INTERVAL) * 100, 100);
-    progressBar.style.width = percent + "%";
-  }, 100); // update every 100ms
-}
+const RETRY_INTERVAL = 60; // seconds
 
 async function waitForService() {
   let ready = false;
 
   while (!ready) {
-    // Start visual progress bar
-    const interval = startProgressBar();
+    // Animate progress bar and countdown
+    const progressBar = document.getElementById("progress-bar");
+    const countdownText = document.getElementById("countdown");
 
+    progressBar.style.width = "0%";
+
+    for (let i = 0; i <= RETRY_INTERVAL; i++) {
+      progressBar.style.width = `${(i / RETRY_INTERVAL) * 100}%`;
+      countdownText.textContent = `Next retry in ${RETRY_INTERVAL - i}s`;
+      await new Promise(r => setTimeout(r, 1000)); // wait 1 second
+    }
+
+    // Try ping
     try {
       const res = await fetch(PING_URL, { cache: "no-cache" });
       if (res.ok) ready = true;
     } catch (e) {
       console.log("Service not ready yet...");
     }
-
-    clearInterval(interval); // stop progress bar
-
-    if (!ready) {
-      // reset progress bar
-      document.getElementById("progress-bar").style.width = "0%";
-      // wait full minute before next retry
-      await new Promise(r => setTimeout(r, RETRY_INTERVAL));
-    }
   }
 
+  // Backend awake
   document.getElementById("loading").style.display = "none";
 
-  // Show backend response in same tab
   const appRes = await fetch(APP_URL);
   const appText = await appRes.text();
   document.getElementById("app").innerHTML = appText;
