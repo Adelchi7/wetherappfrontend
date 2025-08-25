@@ -1,5 +1,6 @@
 // Use your Render backend URL here
-const PING_URL = "https://your-backend.onrender.com/ping";
+const PING_URL = "https://wetherappbackend.onrender.com/ping";
+const APP_URL = "https://wetherappbackend.onrender.com/app";
 
 async function waitForService() {
   let ready = false;
@@ -18,7 +19,13 @@ async function waitForService() {
   }
 
   document.getElementById("loading").style.display = "none";
-  window.location.href = "https://your-backend.onrender.com/app";
+
+  // Fetch /app content and show it in page
+  const appRes = await fetch(APP_URL);
+  const appText = await appRes.text();
+  document.getElementById("app").innerHTML = appText;
 }
 
 waitForService();
+
+
