@@ -1,40 +1,42 @@
 const PING_URL = "https://wetherappbackend.onrender.com/ping";
 const APP_URL  = "https://wetherappbackend.onrender.com/app";
-const RETRY_INTERVAL = 6; // seconds
 
-document.addEventListener("DOMContentLoaded", () => {
-  (async function waitForService() {
-    const progressBar = document.getElementById("progress-bar");
-    const countdownText = document.getElementById("countdown");
+const RETRY_INTERVAL = 6; // seconds (you can change this)
 
-    let ready = false;
+async function waitForService() {
+  const progressBar = document.getElementById("progress-bar");
+  const countdownText = document.getElementById("countdown");
 
-    while (!ready) {
-      try {
-        const res = await fetch(PING_URL, { cache: "no-cache" });
-        if (res.ok) {
-          ready = true;
-          break;
-        }
-      } catch (e) {
-        console.log("Service not ready yet...");
+  let ready = false;
+
+  while (!ready) {
+    try {
+      const res = await fetch(PING_URL, { cache: "no-cache" });
+      if (res.ok) {
+        ready = true;
+        break;
       }
-
-      // Animate progress bar
-      const steps = RETRY_INTERVAL * 10; // 10 updates/sec
-      for (let i = 0; i <= steps; i++) {
-        progressBar.style.width = `${(i / steps) * 100}%`;
-        countdownText.textContent = `Next retry in ${Math.ceil(RETRY_INTERVAL - (i / 10))}s`;
-         console.log("Progress:", progressBar.style.width); // 👈 add this
-        await new Promise(r => setTimeout(r, 100));
-      }
-      progressBar.style.width = "0%";
+    } catch (e) {
+      console.log("Service not ready yet...");
     }
 
-    // Backend awake → redirect to frontend
-    window.location.href = APP_URL;
-  })();
-});
+    // Animate progress bar for RETRY_INTERVAL seconds
+    const steps = RETRY_INTERVAL * 10; // 10 updates/sec
+    for (let i = 0; i <= steps; i++) {
+      progressBar.style.width = `${(i / steps) * 100}%`;
+      countdownText.textContent = `Next retry in ${Math.ceil(RETRY_INTERVAL - (i / 10))}s`;
+      await new Promise(r => setTimeout(r, 100));
+    }
+    // reset bar for next retry
+    progressBar.style.width = "0%";
+  }
+
+  // Backend awake → redirect user
+  window.location.href = APP_URL;
+}
+
+// Run when page loads
+waitForService();
 
 async function chooseColor(color) {
   const res = await fetch("/api/choice", {
@@ -48,19 +50,6 @@ async function chooseColor(color) {
     `You chose <b style="color:${data.color}">${data.color}</b><br>` +
     `Location: ${data.location}`;
 }
-
-async function testBar() {
-  const progressBar = document.getElementById("progress-bar");
-  const countdownText = document.getElementById("countdown");
-
-  for (let i = 0; i <= 100; i++) {
-    progressBar.style.width = `${i}%`;
-    countdownText.textContent = `Progress ${i}%`;
-    await new Promise(r => setTimeout(r, 50));
-  }
-}
-testBar();
-
 
 async function submitInput(data) {
   await fetch("/api/submit", {
