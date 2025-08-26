@@ -20,11 +20,13 @@ async function waitForService() {
     }
 
     // Animate progress bar for retry interval
-    for (let i = 0; i < RETRY_INTERVAL; i++) {
-      progressBar.style.width = `${(i / RETRY_INTERVAL) * 100}%`;
-      countdownText.textContent = `Next retry in ${RETRY_INTERVAL - i}s`;
-      await new Promise(r => setTimeout(r, 1000));
+    const steps = RETRY_INTERVAL * 10; // 10 updates per second
+    for (let i = 0; i <= steps; i++) {
+      progressBar.style.width = `${(i / steps) * 100}%`;
+      countdownText.textContent = `Next retry in ${Math.ceil(RETRY_INTERVAL - (i/10))}s`;
+      await new Promise(r => setTimeout(r, 100));
     }
+
   }
 
   // Backend awake → hide loading and fetch app
