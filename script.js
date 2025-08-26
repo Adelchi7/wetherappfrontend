@@ -1,6 +1,6 @@
 const PING_URL = "https://wetherappbackend.onrender.com/ping";
 const APP_URL  = "https://wetherappbackend.onrender.com/app";
-const RETRY_INTERVAL = 60; // seconds
+const RETRY_INTERVAL = 6; // seconds
 
 async function waitForService() {
   const progressBar = document.getElementById("progress-bar");
@@ -26,6 +26,7 @@ async function waitForService() {
       countdownText.textContent = `Next retry in ${Math.ceil(RETRY_INTERVAL - (i / 10))}s`;
       await new Promise(r => setTimeout(r, 100));
     }
+    progressBar.style.width = "0%";
   }
 
   // Backend awake → redirect to frontend
