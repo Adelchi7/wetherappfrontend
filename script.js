@@ -38,7 +38,7 @@ async function waitForService() {
 // Run when page loads
 waitForService();
 
-async function chooseColor(color) {
+window.chooseColor = async function(color) {
   const res = await fetch("/api/choice", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -49,7 +49,7 @@ async function chooseColor(color) {
   document.getElementById("result").innerHTML =
     `You chose <b style="color:${data.color}">${data.color}</b><br>` +
     `Location: ${data.location}`;
-}
+};
 
 async function testBar() {
   const progressBar = document.getElementById("progress-bar");
