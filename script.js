@@ -1,7 +1,7 @@
 const PING_URL = "https://wetherappbackend.onrender.com/ping";
 const APP_URL  = "https://wetherappbackend.onrender.com/app";
 
-const RETRY_INTERVAL = 6; // seconds (you can change this)
+const RETRY_INTERVAL = 10; // seconds (you can change this)
 
 async function waitForService() {
   const progressBar = document.getElementById("progress-bar");
@@ -14,26 +14,33 @@ async function waitForService() {
       const res = await fetch(PING_URL, { cache: "no-cache" });
       if (res.ok) {
         ready = true;
-        break;
+        break; // backend is ready, exit loop
       }
     } catch (e) {
       console.log("Service not ready yet...");
     }
 
     // Animate progress bar for RETRY_INTERVAL seconds
-    const steps = RETRY_INTERVAL * 10; // 10 updates/sec
-    for (let i = 0; i < steps; i++) {
-      progressBar.style.width = `${(i / steps) * 100}%`;
-      const secondsLeft = Math.ceil(RETRY_INTERVAL - (i / 10));
+    const intervalMs = 100; // update every 0.1s
+    const steps = (RETRY_INTERVAL * 1000) / intervalMs; // total steps
+    for (let i = 0; i <= steps; i++) {
+      const percent = (i / steps) * 100;
+      progressBar.style.width = `${percent}%`;
+
+      const secondsLeft = Math.ceil(RETRY_INTERVAL - (i * intervalMs) / 1000);
       countdownText.textContent = `Next retry in ${secondsLeft}s`;
-      await new Promise(r => setTimeout(r, 100));
+
+      await new Promise(r => setTimeout(r, intervalMs));
     }
-    progressBar.style.width = "100%"; // ensure full width at end
+
+    // Reset bar for next retry loop if backend not ready
+    progressBar.style.width = "0%";
   }
 
-  // Backend awake → redirect user
+  // Backend is awake → redirect
   window.location.href = APP_URL;
 }
+
 
 // Run when page loads
 waitForService();
