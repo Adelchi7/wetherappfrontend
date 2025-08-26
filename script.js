@@ -15,28 +15,28 @@ async function waitForService() {
       const res = await fetch(PING_URL, { cache: "no-cache" });
       if (res.ok) {
         ready = true;
-        break; // exit loop immediately
+        break;
       }
     } catch (e) {
       console.log("Service not ready yet...");
     }
 
-    // Animate progress bar for retry interval
-    const steps = RETRY_INTERVAL * 10; // 10 updates per second
+    // Animate progress bar
+    const steps = 60 * 10; // 10 updates/sec
     for (let i = 0; i <= steps; i++) {
       progressBar.style.width = `${(i / steps) * 100}%`;
-      countdownText.textContent = `Next retry in ${Math.ceil(RETRY_INTERVAL - (i/10))}s`;
+      countdownText.textContent = `Next retry in ${Math.ceil(6 - i/10)}s`;
       await new Promise(r => setTimeout(r, 100));
     }
-
   }
 
-  // Backend awake → hide loading and fetch app
+  // Backend awake → hide loading and fetch app HTML
   document.getElementById("loading").style.display = "none";
   const appRes = await fetch(APP_URL);
   const appText = await appRes.text();
   document.getElementById("app").innerHTML = appText;
 }
+
 
 waitForService();
 
