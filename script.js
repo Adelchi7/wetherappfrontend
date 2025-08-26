@@ -1,5 +1,6 @@
-const PING_URL = "https://wetherappbackend.onrender.com/ping";
-const APP_URL = "https://wetherappbackend.onrender.com/app";
+const PING_URL = "/ping";
+const APP_URL = "/app";
+
 const RETRY_INTERVAL = 60; // seconds
 
 async function waitForService() {
