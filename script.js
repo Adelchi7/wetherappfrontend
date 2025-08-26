@@ -22,13 +22,13 @@ async function waitForService() {
 
     // Animate progress bar for RETRY_INTERVAL seconds
     const steps = RETRY_INTERVAL * 10; // 10 updates/sec
-    for (let i = 0; i <= steps; i++) {
+    for (let i = 0; i < steps; i++) {
       progressBar.style.width = `${(i / steps) * 100}%`;
-      countdownText.textContent = `Next retry in ${Math.ceil(RETRY_INTERVAL - (i / 10))}s`;
+      const secondsLeft = Math.ceil(RETRY_INTERVAL - (i / 10));
+      countdownText.textContent = `Next retry in ${secondsLeft}s`;
       await new Promise(r => setTimeout(r, 100));
     }
-    // reset bar for next retry
-    progressBar.style.width = "0%";
+    progressBar.style.width = "100%"; // ensure full width at end
   }
 
   // Backend awake → redirect user
@@ -50,6 +50,19 @@ async function chooseColor(color) {
     `You chose <b style="color:${data.color}">${data.color}</b><br>` +
     `Location: ${data.location}`;
 }
+
+async function testBar() {
+  const progressBar = document.getElementById("progress-bar");
+  const countdownText = document.getElementById("countdown");
+
+  for (let i = 0; i <= 100; i++) {
+    progressBar.style.width = `${i}%`;
+    countdownText.textContent = `Progress ${i}%`;
+    await new Promise(r => setTimeout(r, 50));
+  }
+}
+testBar();
+
 
 async function submitInput(data) {
   await fetch("/api/submit", {
