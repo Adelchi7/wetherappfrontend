@@ -3,9 +3,9 @@
 const PING_URL = "https://wetherappbackend.onrender.com/ping";
 const APP_URL  = "https://wetherappbackend.onrender.com/app";
 
-/* const RETRY_INTERVAL = 10; // seconds
+const RETRY_INTERVAL = 10; // seconds
 
-async function waitForService() {
+/*async function waitForService() {
   const progressBar = document.getElementById("progress-bar");
   const countdownText = document.getElementById("countdown");
 
@@ -47,22 +47,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const circumference = 2 * Math.PI * 50;
 
   async function waitForService() {
-    let ready = false;
+    let backendReady = false;
 
-    while (!ready) {
+    while (!backendReady) {
       try {
         const res = await fetch(PING_URL, { cache: "no-cache" });
         if (res.ok) {
-          ready = true;
-          break;
+          backendReady = true;
+          break; // backend is ready
         }
       } catch (e) {
-        console.log("Service not ready yet...");
+        console.log("Backend not ready yet...");
       }
 
+      // Animate countdown for RETRY_INTERVAL seconds
       await animateCountdown(RETRY_INTERVAL);
     }
 
+    // Redirect once backend is ready
     window.location.href = APP_URL;
   }
 
@@ -75,13 +77,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const elapsed = (timestamp - startTime) / 1000;
         const progress = Math.min(elapsed / seconds, 1);
 
+        // update circle
         circle.style.strokeDashoffset = circumference * (1 - progress);
+
+        // update countdown text
         text.textContent = Math.ceil(seconds - elapsed) + "s";
 
         if (progress < 1) {
           requestAnimationFrame(animate);
         } else {
-          circle.style.strokeDashoffset = circumference; // reset for next retry
+          // reset for next retry
+          circle.style.strokeDashoffset = circumference;
           resolve();
         }
       }
