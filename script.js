@@ -44,7 +44,11 @@ const RETRY_INTERVAL = 10; // seconds
 document.addEventListener("DOMContentLoaded", () => {
   const circle = document.getElementById("countdown-progress");
   const text = document.getElementById("countdown-text");
-  const circumference = 2 * Math.PI * 50;
+  const radius = 50;
+  const circumference = 2 * Math.PI * radius;
+
+  circle.style.strokeDasharray = circumference;
+  circle.style.strokeDashoffset = circumference;
 
   async function waitForService() {
     let backendReady = false;
@@ -60,11 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Backend not ready yet...");
       }
 
-      // Animate countdown for RETRY_INTERVAL seconds
       await animateCountdown(RETRY_INTERVAL);
     }
 
-    // Redirect once backend is ready
     window.location.href = APP_URL;
   }
 
