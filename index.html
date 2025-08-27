@@ -5,6 +5,45 @@
   <div id="countdown">Checking backend...</div>
 </div>
 
+<div id="countdown-container">
+  <svg id="countdown-clock" width="120" height="120">
+    <circle
+      id="countdown-bg"
+      r="50"
+      cx="60"
+      cy="60"
+      stroke="#ddd"
+      stroke-width="10"
+      fill="none"
+    />
+    <circle
+      id="countdown-progress"
+      r="50"
+      cx="60"
+      cy="60"
+      stroke="#4caf50"
+      stroke-width="10"
+      fill="none"
+      stroke-linecap="round"
+      stroke-dasharray="314"   <!-- 2 * π * r -->
+      stroke-dashoffset="314"
+      transform="rotate(-90 60 60)"
+    />
+    <text
+      id="countdown-text"
+      x="50%"
+      y="50%"
+      dominant-baseline="middle"
+      text-anchor="middle"
+      font-size="20"
+      font-family="sans-serif"
+    >
+      10s
+    </text>
+  </svg>
+</div>
+
+
 <style>
   #progress-bar { width: 0%; height: 20px; background-color: #4caf50; transition: width 0.2s ease; }
   #progress-container { width: 100%; background-color: #ddd; height: 20px; }
