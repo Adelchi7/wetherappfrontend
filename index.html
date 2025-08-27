@@ -1,54 +1,28 @@
-<div id="loading">
-  <div id="progress-container" style="width: 100%; background-color: #ddd; height: 20px; margin-bottom: 10px;">
-    <div id="progress-bar" style="width:0%; height:100%; background-color:#4caf50; transition: width 0.1s linear;"></div>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Waiting for Backend</title>
+  <style>
+    #countdown-container { margin: 50px auto; width: 120px; }
+    circle { transition: stroke-dashoffset 0.1s linear; }
+  </style>
+</head>
+<body>
+  <h1>Waiting for backend...</h1>
+  <div id="countdown-container">
+    <svg id="countdown-clock" width="120" height="120">
+      <circle r="50" cx="60" cy="60" stroke="#ddd" stroke-width="10" fill="none"/>
+      <circle id="countdown-progress" r="50" cx="60" cy="60" stroke="#4caf50"
+              stroke-width="10" fill="none" stroke-linecap="round"
+              stroke-dasharray="314" stroke-dashoffset="314"
+              transform="rotate(-90 60 60)"/>
+      <text id="countdown-text" x="50%" y="50%" dominant-baseline="middle"
+            text-anchor="middle" font-size="20">10s</text>
+    </svg>
   </div>
-  <div id="countdown">Checking backend...</div>
-</div>
 
-<div id="countdown-container">
-  <svg id="countdown-clock" width="120" height="120">
-    <circle
-      id="countdown-bg"
-      r="50"
-      cx="60"
-      cy="60"
-      stroke="#ddd"
-      stroke-width="10"
-      fill="none"
-    />
-    <circle
-      id="countdown-progress"
-      r="50"
-      cx="60"
-      cy="60"
-      stroke="#4caf50"
-      stroke-width="10"
-      fill="none"
-      stroke-linecap="round"
-      stroke-dasharray="314"
-      stroke-dashoffset="314"
-      transform="rotate(-90 60 60)"
-    />
-    <text
-      id="countdown-text"
-      x="50%"
-      y="50%"
-      dominant-baseline="middle"
-      text-anchor="middle"
-      font-size="20"
-      font-family="sans-serif"
-    >10s</text>
-  </svg>
-</div>
-
-
-
-<style>
-  #progress-bar { width: 0%; height: 20px; background-color: #4caf50; transition: width 0.2s ease; }
-  #progress-container { width: 100%; background-color: #ddd; height: 20px; }
-  #countdown { margin-top: 5px; font-weight: bold; }
-</style>
-
-<script src="script.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
 
 

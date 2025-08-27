@@ -41,62 +41,57 @@ async function waitForService() {
   window.location.href = APP_URL;
 } */
 
-async function waitForService() {
+document.addEventListener("DOMContentLoaded", () => {
   const circle = document.getElementById("countdown-progress");
   const text = document.getElementById("countdown-text");
+  const circumference = 2 * Math.PI * 50;
 
-  let ready = false;
+  async function waitForService() {
+    let ready = false;
 
-  while (!ready) {
-    try {
-      const res = await fetch(PING_URL, { cache: "no-cache" });
-      if (res.ok) {
-        ready = true;
-        break;
+    while (!ready) {
+      try {
+        const res = await fetch(PING_URL, { cache: "no-cache" });
+        if (res.ok) {
+          ready = true;
+          break;
+        }
+      } catch (e) {
+        console.log("Service not ready yet...");
       }
-    } catch (e) {
-      console.log("Service not ready yet...");
+
+      await animateCountdown(RETRY_INTERVAL);
     }
 
-    await animateCountdown(RETRY_INTERVAL);
+    window.location.href = APP_URL;
   }
 
-  window.location.href = APP_URL;
-}
+  function animateCountdown(seconds) {
+    return new Promise(resolve => {
+      let startTime = null;
 
-// Smooth animation using requestAnimationFrame
-function animateCountdown(seconds) {
-  return new Promise(resolve => {
-    const circle = document.getElementById("countdown-progress");
-    const text = document.getElementById("countdown-text");
-    const circumference = 2 * Math.PI * 50; // r=50
+      function animate(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const elapsed = (timestamp - startTime) / 1000;
+        const progress = Math.min(elapsed / seconds, 1);
 
-    let startTime = null;
+        circle.style.strokeDashoffset = circumference * (1 - progress);
+        text.textContent = Math.ceil(seconds - elapsed) + "s";
 
-    function animate(timestamp) {
-      if (!startTime) startTime = timestamp;
-      const elapsed = (timestamp - startTime) / 1000; // seconds
-
-      const progress = Math.min(elapsed / seconds, 1);
-      circle.style.strokeDashoffset = circumference * (1 - progress);
-      text.textContent = Math.ceil(seconds - elapsed) + "s";
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        // reset for next retry
-        circle.style.strokeDashoffset = circumference;
-        resolve();
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          circle.style.strokeDashoffset = circumference; // reset for next retry
+          resolve();
+        }
       }
-    }
 
-    requestAnimationFrame(animate);
-  });
-}
+      requestAnimationFrame(animate);
+    });
+  }
 
-// Start waiting for backend
-waitForService();
-
+  waitForService();
+});
 
 
 
