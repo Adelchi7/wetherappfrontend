@@ -1,9 +1,5 @@
 // script.js → only waiting/progress functionality
 
-const PING_URL = "https://wetherappbackend.onrender.com/ping";
-const APP_URL  = "https://wetherappbackend.onrender.com/app";
-
-const RETRY_INTERVAL = 10; // seconds
 
 /*async function waitForService() {
   const progressBar = document.getElementById("progress-bar");
@@ -41,6 +37,10 @@ const RETRY_INTERVAL = 10; // seconds
   window.location.href = APP_URL;
 } */
 
+const PING_URL = "https://wetherappbackend.onrender.com/ping";
+const APP_URL  = "https://wetherappbackend.onrender.com/app";
+const MAX_WAIT = 60; // seconds
+
 document.addEventListener("DOMContentLoaded", () => {
   const circle = document.getElementById("countdown-progress");
   const text = document.getElementById("countdown-text");
@@ -50,55 +50,29 @@ document.addEventListener("DOMContentLoaded", () => {
   circle.style.strokeDasharray = circumference;
   circle.style.strokeDashoffset = circumference;
 
-  async function waitForService() {
-    let backendReady = false;
+  let elapsed = 0;
 
-    while (!backendReady) {
-      try {
-        const res = await fetch(PING_URL, { cache: "no-cache" });
-        if (res.ok) {
-          backendReady = true;
-          break; // backend is ready
-        }
-      } catch (e) {
-        console.log("Backend not ready yet...");
+  // Circle animation and text update every second
+  const timer = setInterval(() => {
+    elapsed++;
+    if (elapsed > MAX_WAIT) elapsed = MAX_WAIT;
+    text.textContent = `${elapsed}s`;
+    circle.style.strokeDashoffset = circumference * (1 - elapsed / MAX_WAIT);
+  }, 1000);
+
+  // Poll backend independently
+  const poll = setInterval(async () => {
+    try {
+      const res = await fetch(PING_URL, { cache: "no-cache" });
+      if (res.ok) {
+        clearInterval(timer);
+        clearInterval(poll);
+        window.location.href = APP_URL;
       }
-
-      await animateCountdown(RETRY_INTERVAL);
+    } catch (e) {
+      console.log("Backend not ready yet...");
     }
-
-    window.location.href = APP_URL;
-  }
-
-  function animateCountdown(seconds) {
-    return new Promise(resolve => {
-      let startTime = null;
-
-      function animate(timestamp) {
-        if (!startTime) startTime = timestamp;
-        const elapsed = (timestamp - startTime) / 1000;
-        const progress = Math.min(elapsed / seconds, 1);
-
-        // update circle
-        circle.style.strokeDashoffset = circumference * (1 - progress);
-
-        // update countdown text
-        text.textContent = Math.ceil(seconds - elapsed) + "s";
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          // reset for next retry
-          circle.style.strokeDashoffset = circumference;
-          resolve();
-        }
-      }
-
-      requestAnimationFrame(animate);
-    });
-  }
-
-  waitForService();
+  }, 1000);
 });
 
 
