@@ -42,8 +42,8 @@ async function waitForService() {
 } */
 
 async function waitForService() {
-  const countdownCircle = document.getElementById("countdown-progress");
-  const countdownText = document.getElementById("countdown-text");
+  const circle = document.getElementById("countdown-progress");
+  const text = document.getElementById("countdown-text");
 
   let ready = false;
 
@@ -58,31 +58,45 @@ async function waitForService() {
       console.log("Service not ready yet...");
     }
 
-    // Animate circular countdown
-    const intervalMs = 100;
-    const steps = (RETRY_INTERVAL * 1000) / intervalMs;
-    for (let i = 0; i <= steps; i++) {
-      const percent = i / steps;
-      const dashoffset = 314 - 314 * percent; // 314 = circumference
-      countdownCircle.style.strokeDashoffset = dashoffset;
-
-      const secondsLeft = Math.ceil(RETRY_INTERVAL - (i * intervalMs) / 1000);
-      countdownText.textContent = `${secondsLeft}s`;
-
-      await new Promise(r => setTimeout(r, intervalMs));
-    }
-
-    // Reset circle if still not ready
-    countdownCircle.style.strokeDashoffset = 314;
+    await animateCountdown(RETRY_INTERVAL);
   }
 
   window.location.href = APP_URL;
 }
 
+// Smooth animation using requestAnimationFrame
+function animateCountdown(seconds) {
+  return new Promise(resolve => {
+    const circle = document.getElementById("countdown-progress");
+    const text = document.getElementById("countdown-text");
+    const circumference = 2 * Math.PI * 50; // r=50
 
+    let startTime = null;
 
-// run on load
+    function animate(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = (timestamp - startTime) / 1000; // seconds
+
+      const progress = Math.min(elapsed / seconds, 1);
+      circle.style.strokeDashoffset = circumference * (1 - progress);
+      text.textContent = Math.ceil(seconds - elapsed) + "s";
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        // reset for next retry
+        circle.style.strokeDashoffset = circumference;
+        resolve();
+      }
+    }
+
+    requestAnimationFrame(animate);
+  });
+}
+
+// Start waiting for backend
 waitForService();
+
 
 
 
