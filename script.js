@@ -41,65 +41,50 @@ const RETRY_INTERVAL = 10; // seconds
   window.location.href = APP_URL;
 } */
 
+const PING_URL = "/ping";          // Replace with your backend ping URL
+const APP_URL = "/frontend.html";  // URL to redirect when ready
+const MAX_WAIT = 60;               // Max wait in seconds
+
 document.addEventListener("DOMContentLoaded", () => {
   const circle = document.getElementById("countdown-progress");
   const text = document.getElementById("countdown-text");
-  const radius = circle.r.baseVal.value; // get r from SVG
+  const radius = circle.r.baseVal.value;
   const circumference = 2 * Math.PI * radius;
 
-  // This is critical to make the circle animate properly
   circle.style.strokeDasharray = circumference;
   circle.style.strokeDashoffset = circumference;
 
-  async function waitForService() {
-    let backendReady = false;
+  let elapsed = 0;
+  let intervalId;
 
-    while (!backendReady) {
-      try {
-        const res = await fetch(PING_URL, { cache: "no-cache" });
-        if (res.ok) {
-          backendReady = true;
-          break; // backend is ready
-        }
-      } catch (e) {
-        console.log("Backend not ready yet...");
+  async function checkBackend() {
+    try {
+      const res = await fetch(PING_URL, { cache: "no-cache" });
+      if (res.ok) {
+        clearInterval(intervalId);
+        window.location.href = APP_URL;
       }
-
-      await animateCountdown(RETRY_INTERVAL);
+    } catch (e) {
+      // Backend not ready yet
     }
-
-    window.location.href = APP_URL;
   }
 
-  function animateCountdown(seconds) {
-    return new Promise(resolve => {
-      let startTime = null;
+  function tick() {
+    elapsed++;
+    if (elapsed > MAX_WAIT) elapsed = MAX_WAIT;
 
-      function animate(timestamp) {
-        if (!startTime) startTime = timestamp;
-        const elapsed = (timestamp - startTime) / 1000;
-        const progress = Math.min(elapsed / seconds, 1);
+    // Update text
+    text.textContent = `${elapsed}s`;
 
-        // update circle
-        circle.style.strokeDashoffset = circumference * (1 - progress);
+    // Update circle
+    const progress = elapsed / MAX_WAIT;
+    circle.style.strokeDashoffset = circumference * (1 - progress);
 
-        // update countdown text
-        text.textContent = Math.ceil(seconds - elapsed) + "s";
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          // reset for next retry
-          circle.style.strokeDashoffset = circumference;
-          resolve();
-        }
-      }
-
-      requestAnimationFrame(animate);
-    });
+    // Ping backend
+    checkBackend();
   }
 
-  waitForService();
+  intervalId = setInterval(tick, 1000);
 });
 
 
