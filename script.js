@@ -44,9 +44,10 @@ const RETRY_INTERVAL = 10; // seconds
 document.addEventListener("DOMContentLoaded", () => {
   const circle = document.getElementById("countdown-progress");
   const text = document.getElementById("countdown-text");
-  const radius = 50;
+  const radius = circle.r.baseVal.value; // get r from SVG
   const circumference = 2 * Math.PI * radius;
 
+  // This is critical to make the circle animate properly
   circle.style.strokeDasharray = circumference;
   circle.style.strokeDashoffset = circumference;
 
