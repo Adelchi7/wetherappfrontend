@@ -6,19 +6,81 @@
     body { font-family: sans-serif; text-align: center; margin-top: 50px; }
     #countdown-container { margin: 50px auto; width: 120px; }
     circle { transition: stroke-dashoffset 0.1s linear; }
+    /* Make the parent take full viewport and center content */
+    /* Container holding both circle and text side by side */
+    .waiting-container {
+      display: flex;
+      flex-direction: row;       /* side by side */
+      align-items: center;       /* vertically align clock and text */
+      justify-content: center;   /* center horizontally in viewport */
+      height: 100vh;             /* full viewport height */
+      gap: 40px;                 /* space between clock and text */
+      padding: 0 20px;           /* breathing space from edges */
+    }
+
+    /* Stack text vertically */
+    .header-row {
+      display: flex;
+      flex-direction: column;    /* h1 on top of h2 */
+      align-items: flex-start;   /* optional: left-align text relative to each other */
+    }
+
+    /* Text styles */
+    .header-row h1 {
+      font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 0.2em 0;
+      color: #ffffff;
+    }
+    .header-row h2 {
+      font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin: 0.2em 0;
+      color: #cccccc;                 /* fill color */
+      -webkit-text-stroke: 0.5px black;  /* thinner stroke */
+      text-shadow:
+        -0.5px -0.5px 0 #000,
+        0.5px -0.5px 0 #000,
+        -0.5px  0.5px 0 #000,
+        0.5px  0.5px 0 #000;         /* thinner shadow outline */
+    }
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
   </style>
 </head>
 <body>
-  <h1>Loading ...</h1>
-  <h2>Max wait 1 minute</h2>
-  <div id="countdown-container">
-    <svg width="120" height="120">
-      <circle r="50" cx="60" cy="60" stroke="#ddd" stroke-width="10" fill="none"/>
-      <circle id="countdown-progress" r="50" cx="60" cy="60" stroke="#4caf50" stroke-width="10" fill="none" stroke-linecap="round" transform="rotate(-90 60 60)"/>
-      <text id="countdown-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20">10s</text>
-    </svg>
+  <div class="waiting-container">
+    <div id="countdown-container">
+      <svg width="120" height="120">
+        <circle r="50" cx="60" cy="60" stroke="#ddd" stroke-width="10" fill="none"/>
+        <circle id="countdown-progress" r="50" cx="60" cy="60" stroke="#3198cc" stroke-width="10" fill="none" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+        <text id="countdown-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20">0s</text>
+      </svg>
+    </div>
+
+    <div class="header-row">
+      <h1>Loading…</h1>
+      <h2>Max wait 1 minute</h2>
+    </div>
   </div>
-  <canvas id="bg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></canvas>
+  <!-- <canvas id="bg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></canvas> -->
+   <canvas id="bg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></canvas>
 
 
   <script src="script.js" defer></script>
