@@ -36,10 +36,9 @@
   // redirect when backend is up
   window.location.href = APP_URL;
 } */
-
 const PING_URL = "https://wetherappbackend.onrender.com/ping";
 const APP_URL  = "https://wetherappbackend.onrender.com/app";
-const MAX_WAIT = 60; // seconds
+const MAX_WAIT = 60; // one full cycle = 60s
 
 document.addEventListener("DOMContentLoaded", () => {
   const circle = document.getElementById("countdown-progress");
@@ -52,15 +51,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let elapsed = 0;
 
-  // Circle animation and text update every second
+  // Clock loop (1 → 60, then reset)
   const timer = setInterval(() => {
     elapsed++;
-    if (elapsed > MAX_WAIT) elapsed = MAX_WAIT;
+
+    if (elapsed > MAX_WAIT) {
+      elapsed = 1; // reset after 60
+    }
+
     text.textContent = `${elapsed}s`;
-    circle.style.strokeDashoffset = circumference * (1 - elapsed / MAX_WAIT);
+    circle.style.strokeDashoffset =
+      circumference * (1 - elapsed / MAX_WAIT);
   }, 1000);
 
-  // Poll backend independently
+  // Poll backend every 10 seconds
   const poll = setInterval(async () => {
     try {
       const res = await fetch(PING_URL, { cache: "no-cache" });
@@ -72,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (e) {
       console.log("Backend not ready yet...");
     }
-  }, 1000);
+  }, 10000); // 10 sec interval
 });
 
 
