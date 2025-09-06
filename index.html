@@ -72,13 +72,25 @@
 <body>
   <div class="waiting-container">
     <div id="countdown-container">
-      <svg width="120" height="120">
-        <circle r="50" cx="60" cy="60" stroke="#ddd" stroke-width="10" fill="none"/>
-        <circle id="countdown-progress" r="50" cx="60" cy="60" stroke="#3198cc" stroke-width="10" fill="none" stroke-linecap="round" transform="rotate(-90 60 60)"/>
-        <text id="countdown-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="40">0s</text> <!-- doubled from 20 -->
+      <svg width="240" height="240"> <!-- doubled from 120 -->
+        <circle r="100" cx="120" cy="120" stroke="#ddd" stroke-width="20" fill="none"/> <!-- doubled -->
+        <circle id="countdown-progress"
+                r="100"
+                cx="120"
+                cy="120"
+                stroke="#3198cc"
+                stroke-width="20"
+                fill="none"
+                stroke-linecap="round"
+                transform="rotate(-90 120 120)"/> <!-- rotated around new center -->
+        <text id="countdown-text"
+              x="50%"
+              y="50%"
+              dominant-baseline="middle"
+              text-anchor="middle"
+              font-size="40">0s</text> <!-- doubled text -->
       </svg>
     </div>
-
     <div class="header-row">
       <h1>Loading…</h1>
       <h2>Please wait.</h2>
