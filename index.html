@@ -2,64 +2,55 @@
 <html>
 <head>
   <title>Wether Up or Down</title>
-  <!-- Standard favicon -->
-  <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
-  <!-- PNG favicons -->
-  <!-- <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"> -->
-  <!-- <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png"> -->
-  <!-- iOS icon -->
-  <!-- <link rel="apple-touch-icon" href="apple-touch-icon.png"> -->
 
   <link rel="icon" href="favicon.ico?v=2">
   <link rel="icon" sizes="32x32" href="favicon-32x32.png?v=2">
   <link rel="icon" sizes="16x16" href="favicon-16x16.png?v=2">
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 
-
   <style>
     body { font-family: sans-serif; text-align: center; margin-top: 50px; }
     #countdown-container { margin: 50px auto; width: 120px; }
     circle { transition: stroke-dashoffset 0.1s linear; }
-    /* Make the parent take full viewport and center content */
-    /* Container holding both circle and text side by side */
+
     .waiting-container {
       display: flex;
-      flex-direction: row;       /* side by side */
-      align-items: center;       /* vertically align clock and text */
-      justify-content: center;   /* center horizontally in viewport */
-      height: 100vh;             /* full viewport height */
-      gap: 40px;                 /* space between clock and text */
-      padding: 0 20px;           /* breathing space from edges */
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 40px;
+      padding: 0 20px;
     }
 
-    /* Stack text vertically */
     .header-row {
       display: flex;
-      flex-direction: column;    /* h1 on top of h2 */
-      align-items: flex-start;   /* optional: left-align text relative to each other */
+      flex-direction: column;
+      align-items: flex-start;
     }
 
-    /* Text styles */
+    /* Text styles — doubled font sizes */
     .header-row h1 {
       font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
-      font-size: 2rem;
+      font-size: 4rem;  /* was 2rem */
       font-weight: 600;
       margin: 0.2em 0;
       color: #ffffff;
     }
     .header-row h2 {
       font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
-      font-size: 1.2rem;
+      font-size: 2.4rem; /* was 1.2rem */
       font-weight: 400;
       margin: 0.2em 0;
-      color: #cccccc;                 /* fill color */
-      -webkit-text-stroke: 0.5px black;  /* thinner stroke */
+      color: #cccccc;
+      -webkit-text-stroke: 0.5px black;
       text-shadow:
         -0.5px -0.5px 0 #000,
         0.5px -0.5px 0 #000,
         -0.5px  0.5px 0 #000,
-        0.5px  0.5px 0 #000;         /* thinner shadow outline */
+        0.5px  0.5px 0 #000;
     }
+
     body {
       margin: 0;
       height: 100vh;
@@ -84,7 +75,7 @@
       <svg width="120" height="120">
         <circle r="50" cx="60" cy="60" stroke="#ddd" stroke-width="10" fill="none"/>
         <circle id="countdown-progress" r="50" cx="60" cy="60" stroke="#3198cc" stroke-width="10" fill="none" stroke-linecap="round" transform="rotate(-90 60 60)"/>
-        <text id="countdown-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20">0s</text>
+        <text id="countdown-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="40">0s</text> <!-- doubled from 20 -->
       </svg>
     </div>
 
@@ -93,12 +84,11 @@
       <h2>Please wait a minute ... , more or less.</h2>
     </div>
   </div>
-  <!-- <canvas id="bg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></canvas> -->
-   <canvas id="bg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></canvas>
 
-
+  <canvas id="bg" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></canvas>
   <script src="script.js" defer></script>
 </body>
 </html>
+
 
 
