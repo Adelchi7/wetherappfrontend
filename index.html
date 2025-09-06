@@ -71,7 +71,7 @@
 </head>
 <body>
   <div class="waiting-container">
-    <div id="countdown-container">
+    <div id="countdown-container" style="margin: 50px auto; width: 240px;"> <!-- doubled from 120px -->
       <svg width="240" height="240"> <!-- doubled from 120 -->
         <circle r="100" cx="120" cy="120" stroke="#ddd" stroke-width="20" fill="none"/> <!-- doubled -->
         <circle id="countdown-progress"
@@ -82,13 +82,13 @@
                 stroke-width="20"
                 fill="none"
                 stroke-linecap="round"
-                transform="rotate(-90 120 120)"/> <!-- rotated around new center -->
+                transform="rotate(-90 120 120)"/> <!-- updated for new center -->
         <text id="countdown-text"
               x="50%"
               y="50%"
               dominant-baseline="middle"
               text-anchor="middle"
-              font-size="40">0s</text> <!-- doubled text -->
+              font-size="40">0s</text> <!-- doubled from 20 -->
       </svg>
     </div>
     <div class="header-row">
