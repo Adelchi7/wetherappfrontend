@@ -79,26 +79,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   drawLava();
   
-  // === Detect news.html page ===
-  if (document.getElementById("carousel")) {
-    const carousel = document.getElementById("carousel");
-    const totalImages = 5; // number of .avif files
+    // ================== BACKGROUND SLIDESHOW ==================
+  const carousel = document.getElementById("carousel");
+  if (carousel) {
+    const totalImages = 5; // number of .avif files you have in /news
     let index = 0;
 
     for (let i = 1; i <= totalImages; i++) {
-      const picture = document.createElement("picture");
-
-      const sourceAvif = document.createElement("source");
-      sourceAvif.srcset = `news/${i}.avif`;
-      sourceAvif.type = "image/avif";
-      picture.appendChild(sourceAvif);
-
       const img = document.createElement("img");
-      img.src = `news/${i}.avif`;
+      img.src = `news/${i}.avif`;   // adjust path if needed
       if (i === 1) img.classList.add("active");
-      picture.appendChild(img);
-
-      carousel.appendChild(picture);
+      carousel.appendChild(img);
     }
 
     setInterval(() => {
