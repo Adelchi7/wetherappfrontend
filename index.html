@@ -9,28 +9,35 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 
   <style>
-    body { font-family: sans-serif; margin: 0; height: 100vh;
-           display: flex; justify-content: center; align-items: center;
-           background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
-           background-size: 400% 400%; animation: gradientShift 15s ease infinite; }
+    body { 
+      font-family: sans-serif; 
+      margin: 0; 
+      height: 100vh;
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+      background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+      background-size: 400% 400%; 
+      animation: gradientShift 15s ease infinite; 
+    }
 
     #countdown-container { margin: 20px auto; width: 240px; }
     circle { transition: stroke-dashoffset 0.1s linear; }
 
     .waiting-container {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;  /* stack elements vertically */
       align-items: center;
       justify-content: center;
-      gap: 40px;
+      gap: 30px;
       padding: 20px;
-      flex-wrap: wrap; /* allow wrapping on small screens */
+      width: 100%;
     }
 
     .header-row {
       display: flex;
       flex-direction: column;
-      align-items: center; /* center text when stacked */
+      align-items: center;
       text-align: center;
     }
 
@@ -61,22 +68,14 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Mobile-friendly stacking */
-    @media (max-width: 768px) {
-      .waiting-container {
-        flex-direction: column; /* stack clock above text */
-        gap: 20px;
-      }
-      .header-row h1 { font-size: 3.5rem; }
-      .header-row h2 { font-size: 2rem; }
-    }
+    /* Carousel Styles */
     #carousel {
-      width: 90%;           /* take most of available width */
-      max-width: none;      /* remove previous 320px limit */
-      height: 40vw;         /* height relative to width for good aspect ratio */
+      width: 90%;           /* almost full width */
+      max-width: 800px;     /* optional max for desktop */
+      height: 50vw;         /* height relative to width */
       overflow: hidden;
       border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      box-shadow: 0 0 15px rgba(0,0,0,0.6);
       position: relative;
       margin: 0 auto;       /* center horizontally */
     }
@@ -84,7 +83,7 @@
     #carousel picture img {
       width: 100%;
       height: 100%;
-      object-fit: cover; /* fills container without distortion */
+      object-fit: cover; 
       display: block;
       position: absolute;
       top: 0;
@@ -97,16 +96,31 @@
       opacity: 1;
     }
 
-    /* Optional: adjust height on very small screens */
-    @media (max-width: 480px) {
-      #carousel {
-        height: 50vw; /* a bit taller for small screens */
-      }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .header-row h1 { font-size: 3.5rem; }
+      .header-row h2 { font-size: 2rem; }
     }
-</style>
+
+    @media (max-width: 480px) {
+      #carousel { height: 60vw; } /* taller for small screens */
+    }
+  </style>
 </head>
 <body>
   <div class="waiting-container">
+
+    <!-- Carousel at the top -->
+    <div class="carousel" id="carousel"></div>
+    <div class="caption" id="caption"></div>
+
+    <!-- Header text -->
+    <div class="header-row">
+      <h1>Loading…</h1>
+      <h2>Please wait.</h2>
+    </div>
+
+    <!-- Countdown -->
     <div id="countdown-container">
       <svg width="240" height="240">
         <circle r="100" cx="120" cy="120" stroke="#ddd" stroke-width="20" fill="none"/>
@@ -122,13 +136,7 @@
               font-size="60">0s</text>
       </svg>
     </div>
-    <div class="header-row">
-      <h1>Loading…</h1>
-      <h2>Please wait.</h2>
-    </div>
-    <!-- Insert inside .waiting-container, e.g., below header-row -->
-    <div class="carousel" id="carousel" style="width:320px; height:200px; border-radius:12px; overflow:hidden; box-shadow:0 0 10px rgba(0,0,0,0.5);"></div>
-    <div class="caption" id="caption" style="margin-top:10px; color:#fff; font-size:1rem;"></div>
+
   </div>
 
   <canvas id="bg"
