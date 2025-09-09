@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wetherapp is Waking Up...</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #111;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 1.2em;
+    }
+    .carousel {
+      position: relative;
+      width: 80%;
+      max-width: 600px;
+      height: 320px;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }
+    .carousel img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .carousel img.active {
+      opacity: 1;
+    }
+    .caption {
+      margin-top: 12px;
+      font-size: 0.9em;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌍 Gathering the world’s feelings… please wait</h1>
+  <div class="carousel" id="carousel">
+    <img src="1.avif" class="active">
+    <img src="2.avif" >
+    <img src="3.avif" >
+    <img src="4.avif" >
+    <img src="5.avif" >
+    <img src="6.avif" >
+    <img src="7.avif" >
+  </div>
+  <div class="caption" id="caption">News 1</div>
+
+  <script>
+    let index = 0;
+    const imgs = document.querySelectorAll("#carousel img");
+    const caption = document.getElementById("caption");
+
+    setInterval(() => {
+      imgs[index].classList.remove("active");
+      index = (index + 1) % imgs.length;
+      imgs[index].classList.add("active");
+      caption.textContent = imgs[index].alt;
+    }, 5000);
+  </script>
+</body>
+</html>
