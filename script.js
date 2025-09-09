@@ -82,22 +82,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // === Detect news.html page ===
   if (document.getElementById("carousel")) {
     const carousel = document.getElementById("carousel");
-    const caption = document.getElementById("caption");
-    const imageBaseName = "news"; // news1.jpg, news2.avif
-    const totalImages = 5;
+    const caption = document.getElementById("caption"); // can leave empty if you want
+    const totalImages = 5; // set to the actual number of images
     let index = 0;
 
     for (let i = 1; i <= totalImages; i++) {
       const picture = document.createElement("picture");
 
       const sourceAvif = document.createElement("source");
-      sourceAvif.srcset = `${imageBaseName}${i}.avif`;
+      sourceAvif.srcset = `news/${i}.avif`;
       sourceAvif.type = "image/avif";
       picture.appendChild(sourceAvif);
 
       const img = document.createElement("img");
-      img.src = `${imageBaseName}${i}.jpg`;
-      img.alt = `News ${i}`;
+      img.src = `news/${i}.avif`;
       if (i === 1) img.classList.add("active");
       picture.appendChild(img);
 
@@ -109,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
       imgs[index].classList.remove("active");
       index = (index + 1) % imgs.length;
       imgs[index].classList.add("active");
-      caption.textContent = imgs[index].alt;
+      // No caption text needed
     }, 5000);
   }
 });
