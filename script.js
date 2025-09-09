@@ -83,7 +83,28 @@ document.addEventListener("DOMContentLoaded", () => {
   // ================== BACKGROUND SLIDESHOW ==================
   const carousel = document.getElementById("carousel");
   const motto = document.querySelector(".motto");
-  if (carousel) {
+
+  async function loadMottoAndCarousel() {
+    let mottos = [];
+    
+    // ====== Load mottos from JSON ======
+    try {
+      const res = await fetch("news/mottos.json");
+      if (!res.ok) throw new Error("Failed to fetch mottos");
+      mottos = await res.json();
+
+      if (mottos.length > 0 && motto) {
+        const randomIndex = Math.floor(Math.random() * mottos.length);
+        motto.textContent = mottos[randomIndex];
+      }
+    } catch (err) {
+      console.warn(err);
+      if (motto) motto.textContent = "Feel the world, one color at a time."; // fallback
+    }
+
+    // ====== Load carousel images ======
+    if (!carousel) return;
+
     const extensions = ["avif", "jpg", "jpeg", "png", "webp"];
     let index = 0;
 
@@ -101,52 +122,49 @@ document.addEventListener("DOMContentLoaded", () => {
               found = true;
               break;
             }
-          } catch {
-            // ignore errors
-          }
+          } catch {}
         }
         if (!found) break;
         i++;
       }
-
       return files;
     }
 
-    detectImages().then(files => {
-      if (files.length === 0) return;
+    const files = await detectImages();
+    if (files.length === 0) return;
 
-      // shuffle randomly
-      files.sort(() => Math.random() - 0.5);
+    // shuffle files randomly
+    files.sort(() => Math.random() - 0.5);
 
-      // preload first image
-      const firstImgFile = files[0];
-      const firstImg = new Image();
-      firstImg.src = `news/${firstImgFile}`;
-      firstImg.onload = () => {
-        firstImg.classList.add("active");
-        carousel.appendChild(firstImg);
+    // preload first image
+    const firstImg = new Image();
+    firstImg.src = `news/${files[0]}`;
+    firstImg.onload = () => {
+      firstImg.classList.add("active");
+      carousel.appendChild(firstImg);
 
-        // fade out motto
-        if (motto) {
-          motto.style.transition = "opacity 1s ease";
-          motto.style.opacity = 0;
-        }
+      // fade out motto
+      if (motto) {
+        motto.style.transition = "opacity 1s ease";
+        motto.style.opacity = 0;
+      }
 
-        // add rest of images
-        files.slice(1).forEach(file => {
-          const img = document.createElement("img");
-          img.src = `news/${file}`;
-          carousel.appendChild(img);
-        });
+      // append the rest of images
+      files.slice(1).forEach(file => {
+        const img = document.createElement("img");
+        img.src = `news/${file}`;
+        carousel.appendChild(img);
+      });
 
-        // start slideshow
-        setInterval(() => {
-          const imgs = carousel.querySelectorAll("img");
-          imgs[index].classList.remove("active");
-          index = (index + 1) % imgs.length;
-          imgs[index].classList.add("active");
-        }, 5000);
-      };
-    });
+      // start slideshow
+      setInterval(() => {
+        const imgs = carousel.querySelectorAll("img");
+        imgs[index].classList.remove("active");
+        index = (index + 1) % imgs.length;
+        imgs[index].classList.add("active");
+      }, 5000);
+    };
   }
+  // call the function immediately
+  loadMottoAndCarousel();
 });
