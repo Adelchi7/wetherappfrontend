@@ -82,22 +82,56 @@ document.addEventListener("DOMContentLoaded", () => {
     // ================== BACKGROUND SLIDESHOW ==================
   const carousel = document.getElementById("carousel");
   if (carousel) {
-    const totalImages = 5; // number of .avif files you have in /news
+    const extensions = ["avif", "jpg", "jpeg", "png", "webp"];
     let index = 0;
 
-    for (let i = 1; i <= totalImages; i++) {
-      const img = document.createElement("img");
-      img.src = `news/${i}.avif`;   // adjust path if needed
-      if (i === 1) img.classList.add("active");
-      carousel.appendChild(img);
+    async function detectImages() {
+      const files = [];
+      let i = 1;
+
+      while (true) {
+        let found = false;
+        for (const ext of extensions) {
+          try {
+            const res = await fetch(`news/${i}.${ext}`, { method: "HEAD" });
+            if (res.ok) {
+              files.push(`${i}.${ext}`);
+              found = true;
+              break; // stop checking more extensions for this number
+            }
+          } catch {
+            // ignore fetch errors
+          }
+        }
+        if (!found) break; // stop loop if no extension matched this number
+        i++;
+      }
+
+      return files;
     }
 
-    setInterval(() => {
-      const imgs = carousel.querySelectorAll("img");
-      imgs[index].classList.remove("active");
-      index = (index + 1) % imgs.length;
-      imgs[index].classList.add("active");
-    }, 5000);
+    detectImages().then(files => {
+      if (files.length === 0) return;
+
+      // shuffle randomly
+      files.sort(() => Math.random() - 0.5);
+
+      // create <img> elements
+      files.forEach((file, i) => {
+        const img = document.createElement("img");
+        img.src = `news/${file}`;
+        if (i === 0) img.classList.add("active");
+        carousel.appendChild(img);
+      });
+
+      // start slideshow
+      setInterval(() => {
+        const imgs = carousel.querySelectorAll("img");
+        imgs[index].classList.remove("active");
+        index = (index + 1) % imgs.length;
+        imgs[index].classList.add("active");
+      }, 5000);
+    });
   }
 });
 
