@@ -3,10 +3,11 @@ const APP_URL  = "https://wetherappbackend.onrender.com/app";
 const MAX_WAIT = 60; // one full cycle = 60s
 
 document.addEventListener("DOMContentLoaded", () => {
+  
   // ================== CLOCK ==================
   const circle = document.getElementById("countdown-progress");
   const text = document.getElementById("countdown-text");
-  const radius = circle.r.baseVal.value; // read actual <circle r="">
+  const radius = circle.r.baseVal.value; 
   const circumference = 2 * Math.PI * radius;
 
   circle.style.strokeDasharray = circumference;
@@ -32,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (e) {
       console.log("Backend not ready yet...");
     }
-  }, 10000); // every 10s
+  }, 10000);
 
   // ================== LAVA LAMP ==================
   const canvas = document.getElementById("bg");
@@ -78,9 +79,10 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(drawLava);
   }
   drawLava();
-  
-    // ================== BACKGROUND SLIDESHOW ==================
+
+  // ================== BACKGROUND SLIDESHOW ==================
   const carousel = document.getElementById("carousel");
+  const motto = document.querySelector(".motto");
   if (carousel) {
     const extensions = ["avif", "jpg", "jpeg", "png", "webp"];
     let index = 0;
@@ -97,13 +99,13 @@ document.addEventListener("DOMContentLoaded", () => {
             if (res.ok) {
               files.push(`${i}.${ext}`);
               found = true;
-              break; // stop checking more extensions for this number
+              break;
             }
           } catch {
-            // ignore fetch errors
+            // ignore errors
           }
         }
-        if (!found) break; // stop loop if no extension matched this number
+        if (!found) break;
         i++;
       }
 
@@ -116,28 +118,35 @@ document.addEventListener("DOMContentLoaded", () => {
       // shuffle randomly
       files.sort(() => Math.random() - 0.5);
 
-      // create <img> elements
-      files.forEach((file, i) => {
-        const img = document.createElement("img");
-        img.src = `news/${file}`;
-        if (i === 0) img.classList.add("active");
-        carousel.appendChild(img);
-      });
+      // preload first image
+      const firstImgFile = files[0];
+      const firstImg = new Image();
+      firstImg.src = `news/${firstImgFile}`;
+      firstImg.onload = () => {
+        firstImg.classList.add("active");
+        carousel.appendChild(firstImg);
 
-      // start slideshow
-      setInterval(() => {
-        const imgs = carousel.querySelectorAll("img");
-        imgs[index].classList.remove("active");
-        index = (index + 1) % imgs.length;
-        imgs[index].classList.add("active");
-      }, 5000);
+        // fade out motto
+        if (motto) {
+          motto.style.transition = "opacity 1s ease";
+          motto.style.opacity = 0;
+        }
+
+        // add rest of images
+        files.slice(1).forEach(file => {
+          const img = document.createElement("img");
+          img.src = `news/${file}`;
+          carousel.appendChild(img);
+        });
+
+        // start slideshow
+        setInterval(() => {
+          const imgs = carousel.querySelectorAll("img");
+          imgs[index].classList.remove("active");
+          index = (index + 1) % imgs.length;
+          imgs[index].classList.add("active");
+        }, 5000);
+      };
     });
   }
 });
-
-
-
-
-
-
-
