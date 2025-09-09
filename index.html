@@ -70,7 +70,31 @@
       .header-row h1 { font-size: 3.5rem; }
       .header-row h2 { font-size: 2rem; }
     }
-  </style>
+    #carousel {
+      width: 320px;       /* desired width */
+      height: 200px;      /* desired height */
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    #carousel picture img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;  /* ensures the image covers the container */
+      display: block;
+      position: absolute; /* stack images on top of each other */
+      top: 0;
+      left: 0;
+      opacity: 0;         /* hidden by default */
+      transition: opacity 0.5s ease;
+    }
+
+    #carousel picture img.active {
+      opacity: 1;         /* visible image */
+    }
+</style>
 </head>
 <body>
   <div class="waiting-container">

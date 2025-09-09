@@ -82,8 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // === Detect news.html page ===
   if (document.getElementById("carousel")) {
     const carousel = document.getElementById("carousel");
-    const caption = document.getElementById("caption"); // can leave empty if you want
-    const totalImages = 5; // set to the actual number of images
+    const totalImages = 5; // number of .avif files
     let index = 0;
 
     for (let i = 1; i <= totalImages; i++) {
@@ -107,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
       imgs[index].classList.remove("active");
       index = (index + 1) % imgs.length;
       imgs[index].classList.add("active");
-      // No caption text needed
     }, 5000);
   }
 });
