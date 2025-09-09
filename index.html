@@ -71,29 +71,39 @@
       .header-row h2 { font-size: 2rem; }
     }
     #carousel {
-      width: 320px;       /* desired width */
-      height: 200px;      /* desired height */
+      width: 100%;          /* full width of parent container */
+      max-width: 320px;     /* optional max width */
+      height: 200px;        /* you can use relative units like 40vw for more flexibility */
       overflow: hidden;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.5);
       position: relative;
+      margin: 0 auto;       /* center on small screens */
     }
 
     #carousel picture img {
       width: 100%;
       height: 100%;
-      object-fit: cover;  /* ensures the image covers the container */
+      object-fit: cover;
       display: block;
-      position: absolute; /* stack images on top of each other */
+      position: absolute;
       top: 0;
       left: 0;
-      opacity: 0;         /* hidden by default */
+      opacity: 0;
       transition: opacity 0.5s ease;
     }
 
     #carousel picture img.active {
-      opacity: 1;         /* visible image */
+      opacity: 1;
     }
+
+    /* Optional: adjust height on very small screens */
+    @media (max-width: 480px) {
+      #carousel {
+        height: 150px;
+      }
+    }
+
 </style>
 </head>
 <body>
